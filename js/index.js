@@ -23,11 +23,19 @@ const burger = {
 	],
 }
 
+const closeModal = (event) => {
+	if (event.key === 'Escape') {
+		modalProduct.classList.remove('modal_open');
+		document.removeEventListener('keydown', closeModal)
+	}
+}
+
 catalogList.addEventListener('click', (event) => {
 	const target = event.target;
 
 	if (target.closest('.product__detail') || target.closest('.product__image')) {
 		openModal(burger);
+		document.addEventListener('keydown', closeModal);
 	}
 })
 
