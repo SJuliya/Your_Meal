@@ -2,9 +2,10 @@ import {
 	modalProduct,
 	catalogList
 } from "./elements.js";
-import {createCardProduct} from "./createCardProduct.js";
+
 import {openModal} from "./openModal.js";
 import {renderListProduct} from "./renderListProduct.js";
+import {navigationListController} from "./navigationListController.js";
 
 const burger = {
 	title: 'Бургер',
@@ -40,6 +41,7 @@ modalProduct.addEventListener('click', (event) => {
 
 const init = () => {
 	renderListProduct();
+	navigationListController();
 }
 
 init();
