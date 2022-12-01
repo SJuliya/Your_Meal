@@ -1,0 +1,10 @@
+{
+  "name": "yourmealmethed",
+  "version": "1.0.0",
+  "dependencies": {
+  },
+  "scripts": {
+    "start": "npm run open",
+    "open": "concurrently \"http-server -a localhost -p 1235\" \"open http://localhost:1235/\""
+  }
+}
