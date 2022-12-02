@@ -6,22 +6,7 @@ import {
 import {openModal} from "./openModal.js";
 import {renderListProduct} from "./renderListProduct.js";
 import {navigationListController} from "./navigationListController.js";
-
-const burger = {
-	title: 'Бургер',
-	price: 1000,
-	weight: 500,
-	calories: 1500,
-	description: 'Big burger ig burger ig burger ig burger',
-	image: 'img/megaburger.jpg',
-	ingredients: [
-		'bread',
-		'meat',
-		'cheese',
-		'salad',
-		'sauce'
-	],
-}
+import {cartInit} from "./cart.js";
 
 const closeModal = (event) => {
 	if (event.key === 'Escape') {
@@ -34,7 +19,8 @@ catalogList.addEventListener('click', (event) => {
 	const target = event.target;
 
 	if (target.closest('.product__detail') || target.closest('.product__image')) {
-		openModal(burger);
+		const id = target.closest('.product').dataset.idProduct;
+		openModal(id);
 		document.addEventListener('keydown', closeModal);
 	}
 })
@@ -49,7 +35,8 @@ modalProduct.addEventListener('click', (event) => {
 
 const init = () => {
 	renderListProduct();
-	navigationListController();
+	navigationListController(renderListProduct);
+	cartInit();
 }
 
 init();
