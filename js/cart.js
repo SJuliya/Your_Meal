@@ -32,7 +32,7 @@ const renderCartList = async () => {
 		: [];
 
 	const countProduct = cartList.reduce((accumulator, item) => accumulator + item.count, 0);
-	orderCount.textContent = countProduct;
+	orderCount.textContent = countProduct.toString();
 
 	const cartItems = data.map(item => {
 		const li = document.createElement('li');
@@ -91,7 +91,6 @@ const addCart = (id, count = 1) => {
 	updateCartList(cartList);
 }
 
-
 const removeCart = (id) => {
 	const cartList = getCart();
 	const productIndex = cartList.findIndex((item) => item.id === id)
@@ -102,6 +101,11 @@ const removeCart = (id) => {
 	}
 
 	updateCartList(cartList);
+}
+
+export const clearCart = () => {
+	localStorage.removeItem('cart');
+	renderCartList();
 }
 
 const cartController = () => {
