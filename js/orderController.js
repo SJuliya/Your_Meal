@@ -1,5 +1,7 @@
 import {modalDeliveryContainer, modalDeliveryForm} from "./elements.js";
 import {clearCart} from "./cart.js";
+import {getData} from "./getData.js";
+import {API_URL, PREFIX_PRODUCT} from "./const.js";
 
 export const orderController = (getCart) => {
 	const checkDelivery = () => {
@@ -21,31 +23,38 @@ export const orderController = (getCart) => {
 		const data = Object.fromEntries(formData);
 
 		data.order = getCart();
+		const productIds = data.order.map(item => item.id);
 
-		fetch('https://reqres.in/api/users', {
-			method: 'post',
-			body: JSON.stringify(data),
-		}).then(response => response.json())
-		  .then(response => {
-		  		clearCart();
-			   console.log("data: ", data);
+		Promise.all([
+			fetch('https://reqres.in/api/users', {
+				method: 'post',
+				body: JSON.stringify(data),
+			}),
+			getData(`${API_URL}${PREFIX_PRODUCT}?list=${productIds}`)
+		]).then(async ([response, products]) => {
+			response = await response.json();
 
-		  		modalDeliveryContainer.innerHTML = `
+			clearCart();
+
+			modalDeliveryContainer.innerHTML = `
 		  			<h2>Спасибо за заказ!</h2>
 		  			<h3>Ваш номер заказа: ${response.id}</h3>
 		  			<p>В ближайшее время с вами свяжется менеджер</p>
+		  			<br/>
 		  			<p>Ваш заказ:</p>
 		  		`;
 
-		  		const ul = document.createElement('ul');
-		  		data.order.forEach(item => {
-		  			ul.insertAdjacentHTML('beforeend',`<li>${item.id} - ${item.title}</li>`);
-			   });
+			const ul = document.createElement('ul');
+			let productsMap = {};
+			products.forEach(product => {
+				productsMap[product.id] = product
+			});
 
-		  		modalDeliveryContainer.insertAdjacentElement('beforeend', ul)
-/*		  		modalDeliveryForm.reset();
-		  		checkDelivery();*/
-		  });
+			data.order.map(item => {
+				ul.insertAdjacentHTML('beforeend', `<li>${productsMap[item.id].title} - ${item.count}шт.</li>`);
+			});
 
+			modalDeliveryContainer.insertAdjacentElement('beforeend', ul)
+		}).catch(respose => alert(respose));
 	})
 }
